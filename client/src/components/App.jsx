@@ -2,6 +2,7 @@ import React from 'react';
 import MovieList from './MovieList.jsx';
 import SearchMovies from './Search.jsx';
 import AddMovie from './AddMovie.jsx';
+import getMovieData from '../lib/searchTMDB.js'
 
  class App extends React.Component {
   constructor (props) {
@@ -64,6 +65,7 @@ import AddMovie from './AddMovie.jsx';
     } else {
       this.setState( {movieList: searchedList} );
     }
+    getMovieData(this.state.searchString);
   }
 
   onlyWatchedClick(event) {

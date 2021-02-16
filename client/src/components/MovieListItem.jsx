@@ -49,17 +49,17 @@ class MovieListItem extends React.Component {
     return (
       <li className="movie-list-entry">
         <span onClick={this.moreMovieInfoClick}><h2>{this.props.movie.title}</h2></span>
-        <span>
-          <p>{this.props.movie.year}</p>
-          <p>{this.props.movie.userScore}</p>
-          <p>{this.props.movie.rating}</p>
-        </span>
         <button
           className="watched-btn"
           style={greenHighlight}
           onClick={this.onWatchedClick}>
           Watched
         </button>
+        <span>
+          <p>Year:  {this.props.movie.year}</p>
+          <p>User Score:  {this.props.movie.userScore}</p>
+          <p>Rating;  {this.props.movie.rating}</p>
+        </span>
       </li>
     )
   }
