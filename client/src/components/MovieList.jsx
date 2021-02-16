@@ -1,13 +1,17 @@
 import React from 'react';
-import MovieListEntry from './MovieListEntry.jsx';
+import MovieListItem from './MovieListItem.jsx';
 
 // create a function to populate a list of movies
-var MovieList = (props) => (
-  <div>
-    {props.movies.map( item =>
-      <MovieListEntry movie={item} watchedStyle={props.watchedStyle} itemWatched={props.itemWatched} />
-    )}
-  </div>
-)
+var MovieList = function(props) {
+  return (
+    <ul className="movie-list">
+      {props.movies.map( (entry, index) =>
+        <MovieListItem
+        key={entry.title + index}
+        movie={entry} index={index}/>
+      )}
+    </ul>
+  )
+}
 
 export default MovieList;

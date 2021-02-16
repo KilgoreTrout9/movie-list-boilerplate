@@ -1,135 +1,165 @@
 import React from 'react';
 import MovieList from './MovieList.jsx';
-import Search from './Search.jsx';
+import SearchMovies from './Search.jsx';
 import AddMovie from './AddMovie.jsx';
 
-class App extends React.Component {
-  constructor(props) {
+ class App extends React.Component {
+  constructor (props) {
     super(props);
+
     this.state = {
-      searchValue: '',
-      moviesList: defaultMovies,
-      newMovieTitle: '',
-      watched: false
-    };
-
-    this.handleSearchInput = this.handleSearchInput.bind(this);
-    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
-    this.handleAddInput = this.handleAddInput.bind(this);
-    this.handleAddSubmit = this.handleAddSubmit.bind(this);
-    this.onListItemWatched = this.onListItemWatched.bind(this);
-  }
-
-  handleSearchInput(event) {
-    this.setState( {searchValue: event.target.value} );
-  }
-
-  handleSearchSubmit(event) {
-    event.preventDefault();
-    event.target.reset();
-    alert('Did you want to search for ' + this.state.searchValue);
-    //build a new moviesList
-    var newList = this.state.moviesList.filter( (movie) => {
-      return movie.title.indexOf(this.state.searchValue) !== -1;
-    });
-    if( newList.length > 0 ) {
-      this.setState( {moviesList: newList} );
-    } else {
-      alert(`No matches for your input: ${this.state.searchValue}\n--->Returning to original list<---`);
+      newMovie: '',
+      searchString: '',
+      movieList: defaultMovies,
+      onlyWatched: false,
+      onlyToWatch: false
     }
+
+    this.handleAddChange = this.handleAddChange.bind(this);
+    this.handleAddSubmit = this.handleAddSubmit.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+    this.onlyWatchedClick = this.onlyWatchedClick.bind(this);
+    this.onlyToWatchClick = this.onlyToWatchClick.bind(this);
+    this.resetListClick = this.resetListClick.bind(this);
   }
 
-  handleAddInput(event) {
-    this.setState( {newMovieTitle: event.target.value} );
+  handleAddChange(event) {
+    this.setState({newMovie: event.target.value});
   }
 
   handleAddSubmit(event) {
     event.preventDefault();
-    event.target.reset();
-    alert(`Did you want to add ${this.state.newMovieTitle}`);
-    //build a new moviesList without affecting state
-    var newMovie = {'title': this.state.newMovieTitle};
-    var newList = this.state.moviesList;
-    if (newList === defaultMovies) {
-      newList = [];
+    alert('you have added: ' + this.state.newMovie);
+    var updatedList = [];
+    if (this.state.movieList !== defaultMovies) {
+      updatedList = this.state.movieList;
     }
-    newList.push(newMovie);
-    this.setState( {moviesList: newList} );
+    updatedList.push({'title': this.state.newMovie});
+    this.setState( {movieList: updatedList} );
   }
 
-  onListItemWatched() {
-    //toggle the state
-    this.setState({ watched: !this.state.watched });
+  handleSearchChange(event) {
+    this.setState({searchString: event.target.value});
   }
 
-  toggleHover() {
-    this.setState({ hover: !this.state.hover })
+  handleSearchSubmit(event) {
+    event.preventDefault();
+    alert('you have searched for: ' + this.state.searchString);
+    var searchedList = [];
+    //alias the search string and make it lowercase
+    var search = this.state.searchString.toLowerCase()
+    //iterate through the movie list
+    for (var i = 0; i < this.state.movieList.length; i++) {
+      //check each movie for the string using indexOf
+      var currentTitle = this.state.movieList[i].title.toLowerCase()
+      if (currentTitle.indexOf(search) !== -1) {
+        //if the string matches push that movie onto the list
+        searchedList.push(this.state.movieList[i]);
+      }
+    }
+    //if not in the list send an alert
+    if (searchedList.length === 0) {
+      alert('Your search string did not match any of the movies on the list');
+    } else {
+      this.setState( {movieList: searchedList} );
+    }
+  }
+
+  onlyWatchedClick(event) {
+    if (this.state.onlyToWatch) {
+      this.state.onlyToWatch = false;
+    }
+    this.setState({onlyWatched: !this.state.onlyWatched});
+  }
+
+  onlyToWatchClick(event) {
+    if (this.state.onlyWatched) {
+      this.state.onlyWatched = false;
+    }
+    this.setState({onlyToWatch: !this.state.onlyToWatch});
+  }
+
+  resetListClick(event) {
+    this.setState({onlyWatched: false});
+    this.setState({onlyToWatch: false});
   }
 
   render () {
-    var watchedStyle = {
-      backgroundColor: this.state.watched ? 'green' : 'white'
+    var blueHighlight = {
+      background: this.state.onlyWatched ? 'navy' : 'none',
+      color: this.state.onlyWatched ? 'orange' : 'black'
     };
+    var orangeHighlight = {
+      background: this.state.onlyToWatch ? 'orange' : 'none',
+      color: this.state.onlyWatched ? 'navy' : 'black'
+    };
+    if (!this.state.onlyWatched && !this.state.onlyToWatch) {
+      var shownMovies = this.state.movieList;
+    } else {
+      if (this.state.onlyWatched) {
+        var shownMovies = this.state.movieList.filter(movie => movie.watched);
+      } else {
+        var shownMovies = this.state.movieList.filter(movie => !movie.watched)
+      }
+    }
     return (
       <div>
-        <div className="title">
+        <div className="main-title">
           <h1>Movie List</h1>
-        </div>
-        <nav className="addbar">
-          <div className="add-movie">
-            <div><AddMovie addSubmit={this.handleAddSubmit} addInput={this.handleAddInput} /></div>
+          <div>
+            <AddMovie
+            addSubmit={this.handleAddSubmit}
+            addChange={this.handleAddChange} />
           </div>
-        </nav>
-        <nav className="searchbar">
-          <div className="search">
-            <div><Search searchSubmit={this.handleSearchSubmit} searchInput={this.handleSearchInput} /></div>
+          <div>
+            <button
+              className="big-button"
+              style={blueHighlight}
+              onClick={this.onlyWatchedClick}>
+              Watched
+            </button>
+            <button
+              className="big-button"
+              style={orangeHighlight}
+              onClick={this.onlyToWatchClick}>
+              To Watch
+            </button>
+            <button
+              className="big-button"
+              onClick={this.resetListClick}>
+              All Movies
+            </button>
+            <SearchMovies
+            searchSubmit={this.handleSearchSubmit}
+            searchChange={this.handleSearchChange} />
           </div>
-        </nav>
-        <div className="row">
-          <div className="list">
-            <div><MovieList movies={this.state.moviesList} watchedStyle={this.watchedStyle} itemWatched={this.onListItemWatched} /></div>
-          </div>
+            <MovieList
+            movies={shownMovies} />
         </div>
       </div>
-    );
+    )
   }
-
 }
 
 // hardcoded movie list
 var defaultMovies = [
-  {title: 'Mean Girls'},
-  {title: 'Hackers'},
-  {title: 'The Grey'},
-  {title: 'Sunshine'},
-  {title: 'Ex Machina'},
+  {title: 'Mean Girls',
+   watched: false,
+   year: '2004',
+   userScore: 71,
+   rating: 'PG-13'},
+  {title: 'Hackers',
+   watched: false,
+   year: '1995',
+   userScore: 62,
+   rating: 'PG'},
+  {title: 'The Grey',
+  watched: false},
+  {title: 'Sunshine',
+  watched: false},
+  {title: 'Ex Machina',
+  watched: false},
 ];
-
-
-
-//   onListItemClick(newVideo) {
-//     this.setState({
-//       currentVideo: newVideo,
-//     });
-//   }
-
-//   getNewVideos(query) {
-//     var options = {
-//       key: YOUTUBE_API_KEY,
-//       query: query
-//     }
-//     this.props.searchYouTube(options, (videos) =>{
-//       this.setState({
-//         videos: videos,
-//         currentVideo: videos[0]
-//       });
-//     });
-//   }
-
-//   componentDidMount() {
-//     this.getNewVideos('cute puppies');
-//   }
-
-
 
 export default App;

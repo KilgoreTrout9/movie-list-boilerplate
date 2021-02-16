@@ -14,7 +14,7 @@ body {
 .searchbar {
   background: #fff;
   height: 20px;
-  margin-bottom: 20px;
+  margin: 10px 30px;
 }
 
 .form-control {
@@ -38,7 +38,7 @@ body {
   background: #fff;
 }
 
-.add-bar .add-btn {
+.add-btn {
   color: white;
   border-radius: 2px;
   border-color: #251919;
@@ -46,6 +46,7 @@ body {
   width: 10%;
   height: 30px;
   margin-left: 5px;
+  text-align: center;
 }
 
 .btn:hover {
@@ -56,20 +57,31 @@ body {
 
 .movie-list {
   display: inline-block;
-  width: 80%;
+  width: 100%;
   background: #fff;
-  padding: 8px;
-  border: 2px solid blue;
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0,0,0,.1);
-  margin-right: 20px;
 }
 
 .movie-list-entry {
   display: inline-block;
-  width: 60%;
+  float: left;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 80%;
   font-size: 16px;
   padding: 8px;
+}
+
+.watched-btn {
+  float: right;
+  color: rgb(46, 20, 95);
+  border-radius: 2px;
+  border-color: #251919;
+  width: 20%;
+  margin-right: 20px;
+  font-size: 10px;
+  text-align: center;
 }
 
 .loading {
@@ -85,6 +97,15 @@ h1 {
   background-color: bisque;
   text-align: center;
   padding: 10px;
+}
+
+h2 {
+  margin: 10px 0;
+}
+
+p {
+  margin: 0 15px;
+  font-size: 12px;
 }
 
 @media (max-width: 767px) {
