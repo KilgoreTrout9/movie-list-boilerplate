@@ -65,7 +65,8 @@ import getMovieData from '../lib/searchTMDB.js'
     } else {
       this.setState( {movieList: searchedList} );
     }
-    getMovieData(this.state.searchString);
+    var data = getMovieData(this.state.searchString);
+    console.log('back in app', data);
   }
 
   onlyWatchedClick(event) {

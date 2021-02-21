@@ -6,6 +6,7 @@ const getMovieData = (string) => {
   axios.get(searchString)
     .then( data => {
       console.log(data.data.results)
+      return data.data.results
   });
 };
 
